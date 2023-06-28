@@ -1,19 +1,31 @@
 import { Color } from '../Color';
-import { PieceType } from './PieceType';
+import { Piece } from './Piece';
 import whiteImageFile from '../../Images/white_knight.png';
 import blackImageFile from '../../Images/black_knight.png';
+import { Coordinate } from '../Coordinate';
 
-export class Knight implements PieceType {
-   public image;
-   public color;
-   public coordinate;
-   public legalPositions = [];
+export class Knight extends Piece {
+   constructor(
+      row: number,
+      column: number,
+      color: Color,
+      legalPositions: Coordinate[] | undefined = undefined
+   ) {
+      // Generate default positions
+      if (legalPositions === undefined) {
+         const directionMultiplyer = color == Color.WHITE ? -1 : 1;
 
-   constructor(row: number, column: number, color: Color) {
-      this.coordinate = { row, column };
-      this.color = color;
+         legalPositions = [
+            { row: row + 2 * directionMultiplyer, column: column + 1 },
+            { row: row + 2 * directionMultiplyer, column: column - 1 },
+         ];
+      }
 
-      if (color == Color.WHITE) this.image = whiteImageFile;
-      else this.image = blackImageFile;
+      super(
+         color,
+         { row, column },
+         color == Color.WHITE ? whiteImageFile : blackImageFile,
+         legalPositions
+      );
    }
 }

@@ -20,3 +20,18 @@ code {
    -moz-user-select: none;
    -ms-user-select: none;
 }
+
+.fill {
+   width: 100%;
+   height: 100%;
+}
+
+.legal-move-overlay {
+   background-color: green;
+   opacity: 20%;
+}
+
+.legal-take-overlay {
+   background-color: red;
+   opacity: 20%;
+}

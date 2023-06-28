@@ -1,5 +1,5 @@
 import { Draggable } from './Draggable';
-import { PieceType } from '../types/Pieces/PieceType';
+import { Piece } from '../types/Pieces/Piece';
 import { useRecoilValue } from 'recoil';
 import { currentTurnState } from '../state';
 
@@ -7,7 +7,7 @@ import { currentTurnState } from '../state';
  * A UI piece component. Is draggable
  * @param piece Contains the PieceType information
  */
-export default function Piece({ piece }: { piece: PieceType }) {
+export default function PieceComponent({ piece }: { piece: Piece }) {
    const currentTurn = useRecoilValue(currentTurnState);
 
    return (

@@ -6,7 +6,7 @@ import {
    currentlyDraggedPieceState,
    squaresState,
 } from '../state';
-import Piece from './Piece';
+import PieceComponent from './PieceComponent';
 import { Color } from '../types/Color';
 
 /**
@@ -25,6 +25,8 @@ export default function Chessboard() {
    function handleDragStart(event: any) {
       const coordinate = event.active.id;
       const newSquares = [...squares];
+
+      console.log(squares);
 
       // Record what piece is being moved
       const piece = squares[coordinate.row][coordinate.column];
@@ -85,14 +87,16 @@ export default function Chessboard() {
                      <Square
                         key={`${rowIndex}${columnIndex}`}
                         coordinate={{ row: rowIndex, column: columnIndex }}
-                        square={piece}
+                        piece={piece}
                      />
                   ))}
                </div>
             ))}
 
             <DragOverlay>
-               {currentDraggedPiece && <Piece piece={currentDraggedPiece} />}
+               {currentDraggedPiece && (
+                  <PieceComponent piece={currentDraggedPiece} />
+               )}
             </DragOverlay>
          </div>
       </DndContext>

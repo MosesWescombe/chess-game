@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { PieceType } from './types/Pieces/PieceType';
+import { Piece } from './types/Pieces/Piece';
 import { Pawn } from './types/Pieces/Pawn';
 import { Color } from './types/Color';
 import { Rook } from './types/Pieces/Rook';
@@ -21,7 +21,7 @@ export const squaresState = atom({
         [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
         [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
         [new Pawn(6, 0, Color.WHITE), new Pawn(6, 1, Color.WHITE), new Pawn(6, 2, Color.WHITE), new Pawn(6, 3, Color.WHITE), new Pawn(6, 4, Color.WHITE), new Pawn(6, 5, Color.WHITE), new Pawn(6, 6, Color.WHITE), new Pawn(6, 7, Color.WHITE)],
-        [new Rook(7, 0, Color.WHITE), new Knight(7, 1, Color.WHITE), new Bishop(7, 2, Color.WHITE), new Queen(7, 3, Color.WHITE), new King(7, 4, Color.WHITE), new Bishop(7, 5, Color.WHITE), new Knight(7, 6, Color.WHITE), new Rook(7, 7, Color.WHITE)]] as (PieceType | undefined)[][],
+        [new Rook(7, 0, Color.WHITE), new Knight(7, 1, Color.WHITE), new Bishop(7, 2, Color.WHITE), new Queen(7, 3, Color.WHITE), new King(7, 4, Color.WHITE), new Bishop(7, 5, Color.WHITE), new Knight(7, 6, Color.WHITE), new Rook(7, 7, Color.WHITE)]] as (Piece | undefined)[][],
 });
 
 /**
@@ -29,7 +29,7 @@ export const squaresState = atom({
  */
 export const currentlyDraggedPieceState = atom({
     key: 'draggedPiece',
-    default: undefined as PieceType | undefined
+    default: undefined as Piece | undefined
 })
 
 export const currentTurnState = atom({

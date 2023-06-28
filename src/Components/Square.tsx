@@ -1,7 +1,9 @@
+import { useRecoilState } from 'recoil';
 import { Coordinate } from '../types/Coordinate';
-import { PieceType } from '../types/Pieces/PieceType';
+import { Piece } from '../types/Pieces/Piece';
 import { Droppable } from './Droppable';
-import Piece from './Piece';
+import PieceComponent from './PieceComponent';
+import { currentlyDraggedPieceState } from '../state';
 
 /**
  * A single cell on the chess board
@@ -9,11 +11,13 @@ import Piece from './Piece';
  */
 export default function Square({
    coordinate,
-   square,
+   piece,
 }: {
    coordinate: Coordinate;
-   square: PieceType | undefined;
+   piece: Piece | undefined;
 }) {
+   const [currentDraggedPiece] = useRecoilState(currentlyDraggedPieceState);
+
    /**
     * Check that the square is white. Squares alternate color accross a row and down a column
     * starting with a white square in the top left.
@@ -22,6 +26,16 @@ export default function Square({
       if (coordinate.row % 2 === 0) return coordinate.column % 2 === 0;
       else return coordinate.column % 2 === 1;
    }
+
+   const isLegalMoveSquare = (): boolean => {
+      if (!currentDraggedPiece) return false;
+
+      return (
+         currentDraggedPiece.legalPositions.findIndex(
+            (c) => c.row == coordinate.row && c.column == coordinate.column
+         ) !== -1
+      );
+   };
 
    return (
       <Droppable id={coordinate}>
@@ -34,8 +48,20 @@ export default function Square({
                height: '100px',
             }}
          >
-            {/* Render any related piece. */}
-            {square && <Piece piece={square} />}
+            <div
+               className={`fill 
+                  ${
+                     isLegalMoveSquare()
+                        ? isLegalMoveSquare() && piece
+                           ? 'legal-take-overlay'
+                           : 'legal-move-overlay'
+                        : ''
+                  }
+               `}
+            >
+               {/* Render any related piece. */}
+               {piece && <PieceComponent piece={piece} />}
+            </div>
          </div>
       </Droppable>
    );
