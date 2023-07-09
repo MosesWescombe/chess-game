@@ -1,5 +1,5 @@
 import { Draggable } from './Draggable';
-import { Piece } from '../types/Pieces/Piece';
+import { Piece } from '../types/Pieces';
 import { useRecoilValue } from 'recoil';
 import { currentTurnState } from '../state';
 
@@ -13,7 +13,7 @@ export default function PieceComponent({ piece }: { piece: Piece }) {
    return (
       <Draggable
          key={piece.coordinate}
-         id={piece.coordinate}
+         id={`${piece.coordinate[0]},${piece.coordinate[1]}`}
          style={{
             width: '100%',
             height: '100%',

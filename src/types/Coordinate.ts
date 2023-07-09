@@ -1,4 +1,1 @@
-export type Coordinate = {
-    row: number,
-    column: number
-}
+export type Coordinate = [number, number]

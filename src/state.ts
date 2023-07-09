@@ -1,12 +1,7 @@
 import { atom } from 'recoil';
-import { Piece } from './types/Pieces/Piece';
-import { Pawn } from './types/Pieces/Pawn';
+import { Bishop, King, Knight, Pawn, Piece, Queen, Rook } from './types/Pieces';
 import { Color } from './types/Color';
-import { Rook } from './types/Pieces/Rook';
-import { Bishop } from './types/Pieces/Bishop';
-import { Knight } from './types/Pieces/Knight';
-import { Queen } from './types/Pieces/Queen';
-import { King } from './types/Pieces/King';
+import { Move } from './types/Move';
 
 /**
  * Records the board state. Game starts with black on top and white below.
@@ -35,4 +30,9 @@ export const currentlyDraggedPieceState = atom({
 export const currentTurnState = atom({
     key: 'currentTurn',
     default: Color.WHITE
+})
+
+export const previousMoveState = atom({
+    key: 'previousMove',
+    default: null as Move | null
 })

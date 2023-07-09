@@ -1,6 +1,6 @@
 import { useRecoilState } from 'recoil';
 import { Coordinate } from '../types/Coordinate';
-import { Piece } from '../types/Pieces/Piece';
+import { Piece } from '../types/Pieces';
 import { Droppable } from './Droppable';
 import PieceComponent from './PieceComponent';
 import { currentlyDraggedPieceState } from '../state';
@@ -23,8 +23,8 @@ export default function Square({
     * starting with a white square in the top left.
     */
    function isWhiteSquare(): boolean {
-      if (coordinate.row % 2 === 0) return coordinate.column % 2 === 0;
-      else return coordinate.column % 2 === 1;
+      if (coordinate[0] % 2 === 0) return coordinate[1] % 2 === 0;
+      else return coordinate[1] % 2 === 1;
    }
 
    const isLegalMoveSquare = (): boolean => {
@@ -32,13 +32,13 @@ export default function Square({
 
       return (
          currentDraggedPiece.legalPositions.findIndex(
-            (c) => c.row == coordinate.row && c.column == coordinate.column
+            (c) => c[0] === coordinate[0] && c[1] === coordinate[1]
          ) !== -1
       );
    };
 
    return (
-      <Droppable id={coordinate}>
+      <Droppable id={`${coordinate[0]},${coordinate[1]}`}>
          <div
             className="d-flex"
             style={{
