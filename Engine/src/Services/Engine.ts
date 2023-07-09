@@ -1,4 +1,4 @@
-import { MoveRequestDto } from "../types/MoveRequestDto";
+import { MoveRequestDto } from "shared-types";
 
 export class EngineService {
     isMoveLegal(moveRequest: MoveRequestDto) {

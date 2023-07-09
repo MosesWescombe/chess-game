@@ -1,8 +1,7 @@
+import { MoveRequestDto, BoardState, MoveResponseDto } from "shared-types";
 import { EngineService } from "./Services/Engine";
 import { Request, Response } from 'express';
-import { MoveRequestDto } from "./types/MoveRequestDto";
-import { BoardState } from "./types/BoardState";
-import { MoveResponseDto } from "./types/MoveResponseDto";
+
 
 export class EngineController {
     private engineService: EngineService;

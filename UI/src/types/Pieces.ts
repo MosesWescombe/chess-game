@@ -1,5 +1,4 @@
-import { Color } from './Color';
-import { Coordinate } from './Coordinate';
+import { PieceDto, Color, Coordinate } from 'shared-types';
 
 import whiteKingImageFile from '../Images/white_king.png';
 import blackKingImageFile from '../Images/black_king.png';
@@ -18,7 +17,7 @@ import blackRookImageFile from '../Images/black_rook.png';
 
 import whitePawnImageFile from '../Images/white_pawn.png';
 import blackPawnImageFile from '../Images/black_pawn.png';
-import { PieceDto } from './PieceDto';
+
 
 export function convertPiceToDto(piece: Piece) {
    const dto: PieceDto = {

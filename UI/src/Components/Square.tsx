@@ -1,9 +1,9 @@
 import { useRecoilState } from 'recoil';
-import { Coordinate } from '../types/Coordinate';
 import { Piece } from '../types/Pieces';
 import { Droppable } from './Droppable';
 import PieceComponent from './PieceComponent';
 import { currentlyDraggedPieceState } from '../state';
+import { Coordinate } from 'shared-types';
 
 /**
  * A single cell on the chess board

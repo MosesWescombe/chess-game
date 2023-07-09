@@ -7,9 +7,8 @@ import {
    squaresState,
 } from '../state';
 import PieceComponent from './PieceComponent';
-import { Color } from '../types/Color';
 import { useApi } from '../api';
-import { Coordinate } from '../types/Coordinate';
+import { Coordinate, Color } from 'shared-types';
 
 /**
  * Chess Board. Composed of all chess squares and any pieces placed on a square.

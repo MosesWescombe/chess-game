@@ -1,7 +1,6 @@
 import { atom } from 'recoil';
 import { Bishop, King, Knight, Pawn, Piece, Queen, Rook } from './types/Pieces';
-import { Color } from './types/Color';
-import { Move } from './types/Move';
+import { Color, Move } from 'shared-types';
 
 /**
  * Records the board state. Game starts with black on top and white below.

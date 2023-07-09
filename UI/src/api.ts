@@ -1,11 +1,8 @@
 import axios from "axios";
-import { MoveRequestDto } from "./types/MoveRequestDto";
-import { PieceDto } from "./types/PieceDto";
-import { Piece, convertPiceToDto } from "./types/Pieces";
-import { Move } from "./types/Move";
+import { convertPiceToDto } from "./types/Pieces";
 import { useRecoilValue } from "recoil";
 import { currentlyDraggedPieceState, previousMoveState, squaresState } from "./state";
-import { MoveResponseDto } from "./types/MoveResponseDto";
+import { PieceDto, Move, MoveResponseDto, MoveRequestDto } from "shared-types";
 
 export function useApi() {
     const previousMove = useRecoilValue(previousMoveState);

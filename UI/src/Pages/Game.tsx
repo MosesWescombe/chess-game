@@ -1,9 +1,9 @@
 import Chessboard from '../Components/Chessboard';
 import { useRecoilValue } from 'recoil';
 import { currentTurnState } from '../state';
-import { Color } from '../types/Color';
 import { ToggleButtonGroup, ToggleButton, IconButton } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
+import { Color } from 'shared-types';
 
 export default function Game() {
    const currentTurn = useRecoilValue(currentTurnState);

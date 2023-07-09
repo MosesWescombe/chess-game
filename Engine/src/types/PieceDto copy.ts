@@ -1,4 +1,4 @@
-import { Color } from "./Color";
+import { Color } from "shared-types";
 
 export class PieceDto {
     constructor(
