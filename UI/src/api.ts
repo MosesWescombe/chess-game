@@ -1,5 +1,5 @@
 import axios from "axios";
-import { convertPiceToDto } from "./types/Pieces";
+import { convertPieceToDto } from "./types/Pieces";
 import { useRecoilValue } from "recoil";
 import { currentlyDraggedPieceState, previousMoveState, squaresState } from "./state";
 import { PieceDto, Move, MoveResponseDto, MoveRequestDto } from "shared-types";
@@ -13,11 +13,11 @@ export function useApi() {
         const pieces: PieceDto[] = [];
 
         if (draggedPiece)
-            pieces.push(convertPiceToDto(draggedPiece))
+            pieces.push(convertPieceToDto(draggedPiece))
 
         for (const row of squares) {
             for (const square of row) {
-                if (square) pieces.push(convertPiceToDto(square))
+                if (square) pieces.push(convertPieceToDto(square))
             }
         }
 
@@ -32,7 +32,7 @@ export function useApi() {
 
             if (response.status === 200) {
                 const data = response.data;
-                console.log(data)
+
                 return data;
             }
         } catch (e) {

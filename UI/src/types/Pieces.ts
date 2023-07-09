@@ -1,4 +1,4 @@
-import { PieceDto, Color, Coordinate } from 'shared-types';
+import { PieceDto, Color, Coordinate, PieceType } from 'shared-types';
 
 import whiteKingImageFile from '../Images/white_king.png';
 import blackKingImageFile from '../Images/black_king.png';
@@ -18,9 +18,18 @@ import blackRookImageFile from '../Images/black_rook.png';
 import whitePawnImageFile from '../Images/white_pawn.png';
 import blackPawnImageFile from '../Images/black_pawn.png';
 
+export function getPieceType(piece: Piece) {
+   if (piece instanceof King) return PieceType.KING
+   if (piece instanceof Queen) return PieceType.QUEEN
+   if (piece instanceof Rook) return PieceType.ROOK
+   if (piece instanceof Knight) return PieceType.KNIGHT
+   if (piece instanceof Bishop) return PieceType.BISHOP
+   return PieceType.PAWN
+}
 
-export function convertPiceToDto(piece: Piece) {
+export function convertPieceToDto(piece: Piece) {
    const dto: PieceDto = {
+      type: getPieceType(piece),
       color: piece.color,
       coordinate: piece.coordinate,
       legalPositions: piece.legalPositions

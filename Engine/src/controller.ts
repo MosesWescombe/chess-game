@@ -1,4 +1,4 @@
-import { MoveRequestDto, BoardState, MoveResponseDto } from "shared-types";
+import { MoveRequestDto } from "shared-types";
 import { EngineService } from "./Services/Engine";
 import { Request, Response } from 'express';
 
@@ -13,11 +13,17 @@ export class EngineController {
     makeMove = (req: Request, res: Response): void => {
         try {
             const request = req.body as MoveRequestDto;
-            console.log(request)
 
-            this.engineService.isMoveLegal(request);
+            // Check that the move is legal
+            if (!this.engineService.isMoveLegal(request)) {
+                res.status(400).send("Illegal move")
+                return;
+            }
 
-            res.status(200).send({ currentBoardState: BoardState.NORMAL, pieces: request.pieces } as MoveResponseDto)
+            // Make the move and recalculate possible moves.
+            const response = this.engineService.makeMove(request)
+
+            res.status(200).send(response)
         } catch (e) {
             console.log(e)
             res.status(500).send("Failed to make the move.")

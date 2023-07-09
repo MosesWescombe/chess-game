@@ -8,7 +8,8 @@ import {
 } from '../state';
 import PieceComponent from './PieceComponent';
 import { useApi } from '../api';
-import { Coordinate, Color } from 'shared-types';
+import { Coordinate, Color, doCoordinatesMatch } from 'shared-types';
+import { convertPiecesToBoard } from '../utils';
 
 /**
  * Chess Board. Composed of all chess squares and any pieces placed on a square.
@@ -23,6 +24,29 @@ export default function Chessboard() {
    const { makeMove } = useApi();
 
    /**
+    * Place the piece that is being dragged back on the board.
+    */
+   function undoPickUp() {
+      if (!currentDraggedPiece) return;
+
+      const newSquares = [...squares];
+
+      // Add the piece back to its origonal location.
+      newSquares[currentDraggedPiece.coordinate[0]] = [
+         ...newSquares[currentDraggedPiece.coordinate[0]].slice(
+            0,
+            currentDraggedPiece.coordinate[1]
+         ),
+         currentDraggedPiece,
+         ...newSquares[currentDraggedPiece.coordinate[0]].slice(
+            currentDraggedPiece.coordinate[1] + 1
+         ),
+      ];
+
+      setSquares(newSquares);
+   }
+
+   /**
     * When the drag starts remove the piece from the board and instead render it in the DragOverlay.
     */
    function handleDragStart(event: any) {
@@ -31,8 +55,6 @@ export default function Chessboard() {
          parseInt(pieceId[0]) as number,
          parseInt(pieceId[2]) as number,
       ] as Coordinate;
-
-      console.log(coordinate);
 
       const newSquares = [...squares];
 
@@ -55,43 +77,40 @@ export default function Chessboard() {
     * When the dragging ends move the piece to the hovered square if any. This should only work if the move is legal.
     */
    async function handleDragEnd(event: any) {
-      const pieceId = event.over.id as string;
+      const squareId = event.over.id as string;
       const coordinate = [
-         parseInt(pieceId[0]) as number,
-         parseInt(pieceId[2]) as number,
+         parseInt(squareId[0]) as number,
+         parseInt(squareId[2]) as number,
       ] as Coordinate;
-
-      const newSquares = [...squares];
 
       if (currentDraggedPiece) {
          const newPiece = { ...currentDraggedPiece };
          newPiece.coordinate = coordinate;
 
-         // TODO: Check that this is a legal move
+         // Cant move on self
+         if (doCoordinatesMatch(currentDraggedPiece.coordinate, coordinate)) {
+            setCurrentDraggedPiece(undefined);
+            undoPickUp();
+            return;
+         }
+
+         // Request the move from the API
          const newBoard = await makeMove({
             from: currentDraggedPiece.coordinate,
             to: coordinate,
          });
 
+         // If the move was successful update the board
          if (newBoard) {
+            // Update board
+            setSquares(convertPiecesToBoard(newBoard.pieces));
+
             // Change the turn
             setCurrentTurn(
                currentTurn == Color.WHITE ? Color.BLACK : Color.WHITE
             );
          } else {
-            // Add the piece back to its origonal location.
-            newSquares[currentDraggedPiece.coordinate[0]] = [
-               ...newSquares[currentDraggedPiece.coordinate[0]].slice(
-                  0,
-                  currentDraggedPiece.coordinate[1]
-               ),
-               currentDraggedPiece,
-               ...newSquares[currentDraggedPiece.coordinate[0]].slice(
-                  currentDraggedPiece.coordinate[1] + 1
-               ),
-            ];
-
-            setSquares(newSquares);
+            undoPickUp();
          }
       }
 

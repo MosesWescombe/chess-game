@@ -2,6 +2,9 @@
 
 */.vscode
 
+/shared-types/**/*.d.ts
+/shared-types/**/*.js
+
 # dependencies
 */node_modules
 /.pnp
