@@ -1,8 +1,0 @@
-export { Color } from "./Color"
-export { BoardState } from "./BoardState"
-export { Coordinate, doCoordinatesMatch } from "./Coordinate"
-export { Move } from "./Move"
-export { MoveRequestDto } from "./MoveRequestDto"
-export { MoveResponseDto } from "./MoveResponseDto"
-export { PieceDto } from "./PieceDto"
-export { PieceType } from "./PieceType"

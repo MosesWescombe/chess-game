@@ -13,7 +13,7 @@ export default function PieceComponent({ piece }: { piece: Piece }) {
    return (
       <Draggable
          key={piece.coordinate}
-         id={`${piece.coordinate[0]},${piece.coordinate[1]}`}
+         id={`${piece.coordinate.file},${piece.coordinate.rank}`}
          style={{
             width: '100%',
             height: '100%',

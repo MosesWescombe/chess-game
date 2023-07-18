@@ -3,7 +3,7 @@ import { Piece } from '../types/Pieces';
 import { Droppable } from './Droppable';
 import PieceComponent from './PieceComponent';
 import { currentlyDraggedPieceState } from '../state';
-import { Coordinate } from 'shared-types';
+import { Coordinate, doCoordinatesMatch, fileToColumn } from '../types/common_types';
 
 /**
  * A single cell on the chess board
@@ -23,8 +23,8 @@ export default function Square({
     * starting with a white square in the top left.
     */
    function isWhiteSquare(): boolean {
-      if (coordinate[0] % 2 === 0) return coordinate[1] % 2 === 0;
-      else return coordinate[1] % 2 === 1;
+      if (fileToColumn(coordinate.file) % 2 !== 0) return coordinate.rank % 2 === 0;
+      else return coordinate.rank % 2 === 1;
    }
 
    const isLegalMoveSquare = (): boolean => {
@@ -32,13 +32,13 @@ export default function Square({
 
       return (
          currentDraggedPiece.legalPositions.findIndex(
-            (c) => c[0] === coordinate[0] && c[1] === coordinate[1]
+            (c) => doCoordinatesMatch(c, coordinate)
          ) !== -1
       );
    };
 
    return (
-      <Droppable id={`${coordinate[0]},${coordinate[1]}`}>
+      <Droppable id={`${coordinate.file},${coordinate.rank}`}>
          <div
             className="d-flex"
             style={{

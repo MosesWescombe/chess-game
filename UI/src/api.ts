@@ -1,34 +1,25 @@
 import axios from "axios";
-import { convertPieceToDto } from "./types/Pieces";
 import { useRecoilValue } from "recoil";
-import { currentlyDraggedPieceState, previousMoveState, squaresState } from "./state";
-import { PieceDto, Move, MoveResponseDto, MoveRequestDto } from "shared-types";
+import { currentlyDraggedPieceState, squaresState } from "./state";
+import { Move, MoveResponseDto, Piece } from "./types/common_types";
 
 export function useApi() {
-    const previousMove = useRecoilValue(previousMoveState);
     const squares = useRecoilValue(squaresState)
     const draggedPiece = useRecoilValue(currentlyDraggedPieceState)
 
-    function convertBoardToPieces() {
-        const pieces: PieceDto[] = [];
+    function convertMoveToPGN(move: Move) {
+        const piece: Piece | undefined = draggedPiece;
 
-        if (draggedPiece)
-            pieces.push(convertPieceToDto(draggedPiece))
+        if (!piece) throw Error("No piece to move");
 
-        for (const row of squares) {
-            for (const square of row) {
-                if (square) pieces.push(convertPieceToDto(square))
-            }
-        }
-
-        return pieces;
+        return `${piece.toPGN()} ${move.to.file}${move.to.rank}`
     }
 
     async function makeMove(move: Move): Promise<MoveResponseDto | null> {
         try {
-            const body = { pieces: convertBoardToPieces(), previousMove, move } as MoveRequestDto;
+            const body = { moves: convertMoveToPGN(move) };
 
-            const response = await axios.post<MoveResponseDto>('http://localhost:3000/makeMove', body)
+            const response = await axios.post<MoveResponseDto>('http://localhost:3030/move', body)
 
             if (response.status === 200) {
                 const data = response.data;

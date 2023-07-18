@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil';
 import { currentTurnState } from '../state';
 import { ToggleButtonGroup, ToggleButton, IconButton } from '@mui/material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
-import { Color } from 'shared-types';
+import { Color } from '../types/common_types';
 
 export default function Game() {
    const currentTurn = useRecoilValue(currentTurnState);

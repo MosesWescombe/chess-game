@@ -1,6 +1,5 @@
 import { atom } from 'recoil';
-import { Bishop, King, Knight, Pawn, Piece, Queen, Rook } from './types/Pieces';
-import { Color, Move } from 'shared-types';
+import { Bishop, Color, King, Knight, Pawn, Piece, Queen, Rook } from './types/common_types';
 
 /**
  * Records the board state. Game starts with black on top and white below.
@@ -8,14 +7,14 @@ import { Color, Move } from 'shared-types';
 export const squaresState = atom({
     key: 'squares',
     default: [
-        [new Rook(0, 0, Color.BLACK), new Knight(0, 1, Color.BLACK), new Bishop(0, 2, Color.BLACK), new Queen(0, 3, Color.BLACK), new King(0, 4, Color.BLACK), new Bishop(0, 5, Color.BLACK), new Knight(0, 6, Color.BLACK), new Rook(0, 7, Color.BLACK)],
-        [new Pawn(1, 0, Color.BLACK), new Pawn(1, 1, Color.BLACK), new Pawn(1, 2, Color.BLACK), new Pawn(1, 3, Color.BLACK), new Pawn(1, 4, Color.BLACK), new Pawn(1, 5, Color.BLACK), new Pawn(1, 6, Color.BLACK), new Pawn(1, 7, Color.BLACK)],
+        [new Rook(Color.BLACK, { file: 'a', rank: 8 }), new Knight(Color.BLACK, { file: 'b', rank: 8 }), new Bishop(Color.BLACK, { file: 'c', rank: 8 }), new Queen(Color.BLACK, { file: 'd', rank: 8 }), new King(Color.BLACK, { file: 'e', rank: 8 }), new Bishop(Color.BLACK, { file: 'f', rank: 8 }), new Knight(Color.BLACK, { file: 'g', rank: 8 }), new Rook(Color.BLACK, { file: 'h', rank: 8 })],
+        [new Pawn(Color.BLACK, { file: 'a', rank: 7 }), new Pawn(Color.BLACK, { file: 'b', rank: 7 }), new Pawn(Color.BLACK, { file: 'c', rank: 7 }), new Pawn(Color.BLACK, { file: 'd', rank: 7 }), new Pawn(Color.BLACK, { file: 'e', rank: 7 }), new Pawn(Color.BLACK, { file: 'f', rank: 7 }), new Pawn(Color.BLACK, { file: 'g', rank: 7 }), new Pawn(Color.BLACK, { file: 'h', rank: 7 })],
         [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
         [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
         [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
         [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
-        [new Pawn(6, 0, Color.WHITE), new Pawn(6, 1, Color.WHITE), new Pawn(6, 2, Color.WHITE), new Pawn(6, 3, Color.WHITE), new Pawn(6, 4, Color.WHITE), new Pawn(6, 5, Color.WHITE), new Pawn(6, 6, Color.WHITE), new Pawn(6, 7, Color.WHITE)],
-        [new Rook(7, 0, Color.WHITE), new Knight(7, 1, Color.WHITE), new Bishop(7, 2, Color.WHITE), new Queen(7, 3, Color.WHITE), new King(7, 4, Color.WHITE), new Bishop(7, 5, Color.WHITE), new Knight(7, 6, Color.WHITE), new Rook(7, 7, Color.WHITE)]] as (Piece | undefined)[][],
+        [new Pawn(Color.WHITE, { file: 'a', rank: 2 }), new Pawn(Color.WHITE, { file: 'b', rank: 2 }), new Pawn(Color.WHITE, { file: 'c', rank: 2 }), new Pawn(Color.WHITE, { file: 'd', rank: 2 }), new Pawn(Color.WHITE, { file: 'e', rank: 2 }), new Pawn(Color.WHITE, { file: 'f', rank: 2 }), new Pawn(Color.WHITE, { file: 'g', rank: 2 }), new Pawn(Color.WHITE, { file: 'h', rank: 2 })],
+        [new Rook(Color.WHITE, { file: 'a', rank: 1 }), new Knight(Color.WHITE, { file: 'b', rank: 1 }), new Bishop(Color.WHITE, { file: 'c', rank: 1 }), new Queen(Color.WHITE, { file: 'd', rank: 1 }), new King(Color.WHITE, { file: 'e', rank: 1 }), new Bishop(Color.WHITE, { file: 'f', rank: 1 }), new Knight(Color.WHITE, { file: 'g', rank: 1 }), new Rook(Color.WHITE, { file: 'h', rank: 1 })]] as (Piece | undefined)[][],
 });
 
 /**
@@ -29,9 +28,4 @@ export const currentlyDraggedPieceState = atom({
 export const currentTurnState = atom({
     key: 'currentTurn',
     default: Color.WHITE
-})
-
-export const previousMoveState = atom({
-    key: 'previousMove',
-    default: null as Move | null
 })

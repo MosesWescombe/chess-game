@@ -28,10 +28,10 @@ code {
 
 .legal-move-overlay {
    background-color: green;
-   opacity: 20%;
+   opacity: 50%;
 }
 
 .legal-take-overlay {
    background-color: red;
-   opacity: 20%;
+   opacity: 50%;
 }

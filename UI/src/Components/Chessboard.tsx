@@ -8,8 +8,8 @@ import {
 } from '../state';
 import PieceComponent from './PieceComponent';
 import { useApi } from '../api';
-import { Coordinate, Color, doCoordinatesMatch } from 'shared-types';
-import { convertPiecesToBoard } from '../utils';
+import { Color, Coordinate, columnToFile, doCoordinatesMatch, fileToColumn } from '../types/common_types';
+import { relative } from 'path';
 
 /**
  * Chess Board. Composed of all chess squares and any pieces placed on a square.
@@ -23,6 +23,11 @@ export default function Chessboard() {
 
    const { makeMove } = useApi();
 
+   function getPiece(coordinate: Coordinate) {
+      console.log(coordinate, 8 - coordinate.rank, fileToColumn(coordinate.file) - 1, squares)
+      return squares[8 - coordinate.rank][fileToColumn(coordinate.file) - 1]
+   }
+
    /**
     * Place the piece that is being dragged back on the board.
     */
@@ -32,14 +37,14 @@ export default function Chessboard() {
       const newSquares = [...squares];
 
       // Add the piece back to its origonal location.
-      newSquares[currentDraggedPiece.coordinate[0]] = [
-         ...newSquares[currentDraggedPiece.coordinate[0]].slice(
+      newSquares[8 - currentDraggedPiece.coordinate.rank] = [
+         ...newSquares[8 - currentDraggedPiece.coordinate.rank].slice(
             0,
-            currentDraggedPiece.coordinate[1]
+            fileToColumn(currentDraggedPiece.coordinate.file) - 1
          ),
          currentDraggedPiece,
-         ...newSquares[currentDraggedPiece.coordinate[0]].slice(
-            currentDraggedPiece.coordinate[1] + 1
+         ...newSquares[8 - currentDraggedPiece.coordinate.rank].slice(
+            fileToColumn(currentDraggedPiece.coordinate.file)
          ),
       ];
 
@@ -51,22 +56,23 @@ export default function Chessboard() {
     */
    function handleDragStart(event: any) {
       const pieceId = event.active.id as string;
-      const coordinate = [
-         parseInt(pieceId[0]) as number,
-         parseInt(pieceId[2]) as number,
-      ] as Coordinate;
+      const coordinate: Coordinate = {file: pieceId[0], rank: parseInt(pieceId[2]) as number}
+
+      console.log(coordinate)
 
       const newSquares = [...squares];
 
       // Record what piece is being moved
-      const piece = squares[coordinate[0]][coordinate[1]];
+      const piece = getPiece(coordinate);
+
+      console.log(piece)
 
       // Temporarily remove the piece from the board
-      newSquares[coordinate[0]] = [
-         ...newSquares[coordinate[0]].slice(0, coordinate[1]),
+      newSquares[8 - coordinate.rank] = [
+         ...newSquares[8 - coordinate.rank].slice(0, fileToColumn(coordinate.file) - 1),
          undefined,
-         ...newSquares[coordinate[0]].slice(coordinate[1] + 1),
-      ];
+         ...newSquares[8 - coordinate.rank].slice(fileToColumn(coordinate.file)),
+      ]
 
       // Update board
       setCurrentDraggedPiece(piece);
@@ -78,10 +84,7 @@ export default function Chessboard() {
     */
    async function handleDragEnd(event: any) {
       const squareId = event.over.id as string;
-      const coordinate = [
-         parseInt(squareId[0]) as number,
-         parseInt(squareId[2]) as number,
-      ] as Coordinate;
+      const coordinate: Coordinate = {file: squareId[0], rank: parseInt(squareId[2]) as number}
 
       if (currentDraggedPiece) {
          const newPiece = { ...currentDraggedPiece };
@@ -103,7 +106,7 @@ export default function Chessboard() {
          // If the move was successful update the board
          if (newBoard) {
             // Update board
-            setSquares(convertPiecesToBoard(newBoard.pieces));
+            // setSquares(convertPiecesToBoard(newBoard.pieces));
 
             // Change the turn
             setCurrentTurn(
@@ -119,31 +122,45 @@ export default function Chessboard() {
 
    return (
       <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-         <div className="d-flex flex-column flex-wrap">
+         <div className="d-flex flex-column flex-wrap px-5">
             {/* Loop through rows */}
             {squares.map((row, rowIndex) => (
                <div
                   key={rowIndex}
                   className="d-flex flex-wrap flex-grow-1"
-                  style={{ height: 'fit-content' }}
+                  style={{ height: 'fit-content', position: 'relative' }}
                >
+                  <div className='d-flex align-items-center' style={{position: 'absolute', left: '-2rem', height: '100px'}}>
+                     <h2>{8 - rowIndex}</h2>
+                  </div>
                   {/* Loop through columns */}
                   {row.map((piece, columnIndex) => (
                      <Square
                         key={`${rowIndex}${columnIndex}`}
-                        coordinate={[rowIndex, columnIndex]}
+                        coordinate={{file: columnToFile(columnIndex + 1), rank: 8 - rowIndex}}
                         piece={piece}
                      />
                   ))}
                </div>
             ))}
 
-            <DragOverlay>
+            <div className="d-flex">
+               <h2 style={{textAlign: 'center', width: '100px', height: '100px'}}>a</h2>
+               <h2 style={{textAlign: 'center', width: '100px', height: '100px'}}>b</h2>
+               <h2 style={{textAlign: 'center', width: '100px', height: '100px'}}>c</h2>
+               <h2 style={{textAlign: 'center', width: '100px', height: '100px'}}>d</h2>
+               <h2 style={{textAlign: 'center', width: '100px', height: '100px'}}>e</h2>
+               <h2 style={{textAlign: 'center', width: '100px', height: '100px'}}>f</h2>
+               <h2 style={{textAlign: 'center', width: '100px', height: '100px'}}>g</h2>
+               <h2 style={{textAlign: 'center', width: '100px', height: '100px'}}>h</h2>
+            </div>
+         </div>
+
+         <DragOverlay>
                {currentDraggedPiece && (
                   <PieceComponent piece={currentDraggedPiece} />
                )}
             </DragOverlay>
-         </div>
       </DndContext>
    );
 }
