@@ -1,34 +1,61 @@
-import { Piece } from "./types/common_types";
+import {
+    Bishop,
+    King,
+    Knight,
+    Pawn,
+    Piece,
+    PieceDto,
+    PieceType,
+    Queen,
+    Rook,
+    fileToColumn
+} from './types/common_types';
 
 function generateEmptyBoard(): (Piece | undefined)[][] {
     const board = [];
 
     for (let i = 0; i < 8; i++) {
-        board.push([undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined])
+        board.push([
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined
+        ]);
     }
 
     return board;
 }
 
-// function convertFromPieceDto(dto: PieceDto) {
-//     let piece: Piece | undefined
+function convertFromPieceDto(dto: PieceDto) {
+    if (dto.piece_type === PieceType.KING)
+        return new King(dto.color, dto.coordinate, false, dto.legal_moves);
+    if (dto.piece_type === PieceType.QUEEN)
+        return new Queen(dto.color, dto.coordinate, false, dto.legal_moves);
+    if (dto.piece_type === PieceType.ROOK)
+        return new Rook(dto.color, dto.coordinate, false, dto.legal_moves);
+    if (dto.piece_type === PieceType.KNIGHT)
+        return new Knight(dto.color, dto.coordinate, false, dto.legal_moves);
+    if (dto.piece_type === PieceType.BISHOP)
+        return new Bishop(dto.color, dto.coordinate, false, dto.legal_moves);
+    if (dto.piece_type === PieceType.PAWN)
+        return new Pawn(dto.color, dto.coordinate, false, dto.legal_moves);
+}
 
-//     if (dto.type === PieceType.KING) piece = new King(dto.coordinate[0], dto.coordinate[1], dto.color, dto.hasMoved, dto.legalPositions)
-//     if (dto.type === PieceType.QUEEN) piece = new Queen(dto.coordinate[0], dto.coordinate[1], dto.color, dto.hasMoved, dto.legalPositions)
-//     if (dto.type === PieceType.ROOK) piece = new Rook(dto.coordinate[0], dto.coordinate[1], dto.color, dto.hasMoved, dto.legalPositions)
-//     if (dto.type === PieceType.KNIGHT) piece = new Knight(dto.coordinate[0], dto.coordinate[1], dto.color, dto.hasMoved, dto.legalPositions)
-//     if (dto.type === PieceType.BISHOP) piece = new Bishop(dto.coordinate[0], dto.coordinate[1], dto.color, dto.hasMoved, dto.legalPositions)
-//     if (dto.type === PieceType.PAWN) piece = new Pawn(dto.coordinate[0], dto.coordinate[1], dto.color, dto.hasMoved, dto.legalPositions)
+export function convertPiecesToBoard(pieces: PieceDto[]): (Piece | undefined)[][] {
+    let board = generateEmptyBoard();
 
-//     return piece;
-// }
+    console.log(board);
+    for (const piece of pieces) {
+        console.log(8 - piece.coordinate.rank, fileToColumn(piece.coordinate.file) - 1);
+        board[8 - piece.coordinate.rank][fileToColumn(piece.coordinate.file) - 1] =
+            convertFromPieceDto(piece);
+    }
 
-// export function convertPiecesToBoard(pieces: PieceDto[]): (Piece | undefined)[][] {
-//     const board = generateEmptyBoard();
+    console.log(board);
 
-//     for (const piece of pieces) {
-//         board[piece.coordinate[0]][piece.coordinate[1]] = convertFromPieceDto(piece);
-//     }
-
-//     return board;
-// }
+    return board;
+}

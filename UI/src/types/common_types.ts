@@ -1,31 +1,39 @@
-export { Piece, Pawn, King, Queen, Rook, Knight, Bishop } from './Pieces'
+export { Piece, Pawn, King, Queen, Rook, Knight, Bishop } from './Pieces';
 
 export type Coordinate = {
-    file: string,
-    rank: number
-}
+    file: string;
+    rank: number;
+};
+
+export type PieceDto = {
+    color: Color;
+    coordinate: Coordinate;
+    piece_type: PieceType;
+    legal_moves: Coordinate[];
+};
 
 export type MoveResponseDto = {
-    body: string
-}
+    moves: string;
+    pieces: PieceDto[];
+};
 
 export type Move = {
-    to: Coordinate,
-    from: Coordinate
-}
+    to: Coordinate;
+    from: Coordinate;
+};
 
 export enum PieceType {
-    PAWN,
-    BISHOP,
-    KNIGHT,
-    ROOK,
-    QUEEN,
-    KING
+    PAWN = 'PAWN',
+    BISHOP = 'BISHOP',
+    KNIGHT = 'KNIGHT',
+    ROOK = 'ROOK',
+    QUEEN = 'QUEEN',
+    KING = 'KING'
 }
 
 export enum Color {
-    WHITE,
-    BLACK
+    WHITE = 'WHITE',
+    BLACK = 'BLACK'
 }
 
 export function doCoordinatesMatch(c1: Coordinate, c2: Coordinate): boolean {
