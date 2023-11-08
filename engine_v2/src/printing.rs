@@ -1,4 +1,4 @@
-use crate::types::BitBoards;
+use crate::types::{BitBoards, ALL_PIECE_BOARDS};
 
 pub fn print_ascii_board(bit_boards: &BitBoards) {
     let board_string: String = String::from(
@@ -7,23 +7,10 @@ pub fn print_ascii_board(bit_boards: &BitBoards) {
 
     let mut char_vec: Vec<char> = board_string.chars().collect();
 
-    insert_piece_to_string_vector(&mut char_vec, bit_boards.white_pawns, 'p');
-    insert_piece_to_string_vector(&mut char_vec, bit_boards.black_pawns, 'p');
-
-    insert_piece_to_string_vector(&mut char_vec, bit_boards.white_king, 'k');
-    insert_piece_to_string_vector(&mut char_vec, bit_boards.black_king, 'k');
-
-    insert_piece_to_string_vector(&mut char_vec, bit_boards.black_queens, 'q');
-    insert_piece_to_string_vector(&mut char_vec, bit_boards.white_queens, 'q');
-    
-    insert_piece_to_string_vector(&mut char_vec, bit_boards.black_rooks, 'r');
-    insert_piece_to_string_vector(&mut char_vec, bit_boards.white_rooks, 'r');
-
-    insert_piece_to_string_vector(&mut char_vec, bit_boards.black_bishops, 'b');
-    insert_piece_to_string_vector(&mut char_vec, bit_boards.white_bishops, 'b');
-
-    insert_piece_to_string_vector(&mut char_vec, bit_boards.black_knights, 'n');
-    insert_piece_to_string_vector(&mut char_vec, bit_boards.white_knights, 'n');
+    for index in ALL_PIECE_BOARDS {
+        let bitboard: u64 = bit_boards.get_bitboard(index as usize);
+        insert_piece_to_string_vector(&mut char_vec, bitboard, index.to_label());
+    }
 
     let result: String = char_vec.into_iter().collect();
     println!("{}", result);

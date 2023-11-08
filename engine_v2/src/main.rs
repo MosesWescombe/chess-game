@@ -6,7 +6,7 @@ use warp::{ Filter, body::json, path, filters::cors::Builder };
 use types::{MoveResponseDto, BitBoards, MoveRequest, PieceType, Coordinate, Color};
 use printing::{print_ascii_board, print_u64_board};
 
-use crate::moves::{move_piece, get_square_moves, recompile_boards};
+use crate::moves::{move_piece, get_square_moves};
 
 /// MAIN
 #[tokio::main]
@@ -77,15 +77,12 @@ fn convert_pgn_to_bitboard(pgn_string: &String) -> BitBoards{
 
         boards = move_piece(boards, components[0], components[1])
     }
-
-    // Recalculate collective boards
-    boards = recompile_boards(boards);
-
+    
     println!("Moved white board: ");
-    print_u64_board(boards.white_pieces);
+    print_u64_board(boards.get_white_pieces());
 
     println!("Moved black board: ");
-    print_u64_board(boards.black_pieces);
+    print_u64_board(boards.get_black_pieces());
 
     println!("Moved board: ");
     print_ascii_board(&boards);
@@ -123,12 +120,12 @@ fn convert_board_to_dto(boards: BitBoards, legal_moves: [u64; 64]) -> Vec<types:
         for file in 0..8 {
             let square_mask: u64 = 0b1 << (rank * 8 + file);
 
-            if boards.all_pieces & square_mask == 0 {
+            if boards.get_all_pieces() & square_mask == 0 {
                 continue;
             }
             
             // Color
-            let color: Color = if boards.white_pieces & square_mask > 0 {
+            let color: Color = if boards.get_white_pieces() & square_mask > 0 {
                 Color::WHITE
             } else {
                 Color::BLACK
@@ -136,17 +133,17 @@ fn convert_board_to_dto(boards: BitBoards, legal_moves: [u64; 64]) -> Vec<types:
 
             // Piece type
             let piece_type: PieceType;
-            if (boards.white_bishops | boards.black_bishops) & square_mask > 0 {
+            if boards.get_bishops() & square_mask > 0 {
                 piece_type = PieceType::BISHOP;
-            } else if (boards.white_king | boards.black_king) & square_mask > 0 {
+            } else if boards.get_kings() & square_mask > 0 {
                 piece_type = PieceType::KING;
-            } else if (boards.white_knights | boards.black_knights) & square_mask > 0 {
+            } else if boards.get_knights() & square_mask > 0 {
                 piece_type = PieceType::KNIGHT;
-            } else if (boards.white_pawns | boards.black_pawns) & square_mask > 0 {
+            } else if boards.get_pawns() & square_mask > 0 {
                 piece_type = PieceType::PAWN;
-            } else if (boards.white_queens | boards.black_queens) & square_mask > 0 {
+            } else if boards.get_queens() & square_mask > 0 {
                 piece_type = PieceType::QUEEN;
-            } else if (boards.white_rooks | boards.black_rooks) & square_mask > 0 {
+            } else if boards.get_rooks() & square_mask > 0 {
                 piece_type = PieceType::ROOK;
             } else {
                 piece_type = PieceType::EMPTY;

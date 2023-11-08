@@ -62,64 +62,157 @@ impl MoveResponseDto {
     }
 }
 
-pub struct BitBoards {
-    // White pieces
-    pub white_pawns: u64,
-    pub white_knights: u64,
-    pub white_bishops: u64,
-    pub white_rooks: u64,
-    pub white_queens: u64,
-    pub white_king: u64,
-    
-    // Black pieces
-    pub black_pawns: u64,
-    pub black_knights: u64,
-    pub black_bishops: u64,
-    pub black_rooks: u64,
-    pub black_queens: u64,
-    pub black_king: u64,
-
-    // Combined pieces
-    pub all_pieces: u64,
-    pub white_pieces: u64,
-    pub black_pieces: u64,
+#[derive(Clone, Copy)]
+pub enum BitBoardIndex {
+    WhitePawns = 0,
+    WhiteKnights,
+    WhiteBishops,
+    WhiteRooks,
+    WhiteQueens,
+    WhiteKing,
+    BlackPawns,
+    BlackKnights,
+    BlackBishops,
+    BlackRooks,
+    BlackQueens,
+    BlackKing,
 }
 
-impl BitBoards {
-    pub fn new() -> Self {
-        let white_pawns: u64 = 0b11111111 << 8;
-        let white_knights: u64 = 0b01000010;
-        let white_bishops: u64 = 0b00100100;
-        let white_rooks: u64 = 0b10000001;
-        let white_queens: u64 = 0b00001000;
-        let white_king: u64 = 0b00010000;
+pub const ALL_WHITE_BOARDS: [BitBoardIndex; 6] = [
+    BitBoardIndex::WhitePawns,
+    BitBoardIndex::WhiteKnights,
+    BitBoardIndex::WhiteBishops,
+    BitBoardIndex::WhiteRooks,
+    BitBoardIndex::WhiteQueens,
+    BitBoardIndex::WhiteKing,
+];
 
-        let black_pawns: u64 = white_pawns.clone() << 8 * 5; // Same as white pawns but shifted up 5 rows
-        let black_knights: u64 = white_knights.clone() << 8 * 7; // Same as white knights but shifted up 7 rows
-        let black_bishops: u64 = white_bishops.clone() << 8 * 7;
-        let black_rooks: u64 = white_rooks.clone() << 8 * 7;
-        let black_queens: u64 = white_king.clone() << 8 * 7;
-        let black_king: u64 = white_queens.clone() << 8 * 7;
+pub const ALL_BLACK_BOARDS: [BitBoardIndex; 6] = [
+    BitBoardIndex::BlackPawns,
+    BitBoardIndex::BlackKnights,
+    BitBoardIndex::BlackBishops,
+    BitBoardIndex::BlackRooks,
+    BitBoardIndex::BlackQueens,
+    BitBoardIndex::BlackKing,
+];
 
-        // Starting from bottom left corner of board
-        BitBoards {
-            white_pawns,
-            white_knights,
-            white_bishops,
-            white_rooks,
-            white_queens,
-            white_king,
+pub const ALL_PIECE_BOARDS: [BitBoardIndex; 12] = [
+    BitBoardIndex::WhitePawns,
+    BitBoardIndex::WhiteKnights,
+    BitBoardIndex::WhiteBishops,
+    BitBoardIndex::WhiteRooks,
+    BitBoardIndex::WhiteQueens,
+    BitBoardIndex::WhiteKing,
+    BitBoardIndex::BlackPawns,
+    BitBoardIndex::BlackKnights,
+    BitBoardIndex::BlackBishops,
+    BitBoardIndex::BlackRooks,
+    BitBoardIndex::BlackQueens,
+    BitBoardIndex::BlackKing,
+];
 
-            black_pawns,
-            black_knights,
-            black_bishops,
-            black_rooks,
-            black_queens,
-            black_king,
-            
-            all_pieces: white_pawns | white_knights | white_bishops | white_rooks | white_queens | white_king | black_pawns | black_knights | black_bishops | black_rooks | black_queens | black_king,
-            white_pieces: white_pawns | white_knights | white_bishops | white_rooks | white_queens | white_king,
-            black_pieces: black_pawns | black_knights | black_bishops | black_rooks | black_queens | black_king,
+impl BitBoardIndex {
+    pub fn to_label(&self) -> char {
+        match self {
+            BitBoardIndex::WhitePawns => 'P',
+            BitBoardIndex::WhiteKnights => 'N',
+            BitBoardIndex::WhiteBishops => 'B',
+            BitBoardIndex::WhiteRooks => 'R',
+            BitBoardIndex::WhiteQueens => 'Q',
+            BitBoardIndex::WhiteKing => 'K',
+            BitBoardIndex::BlackPawns => 'P',
+            BitBoardIndex::BlackKnights => 'N',
+            BitBoardIndex::BlackBishops => 'B',
+            BitBoardIndex::BlackRooks => 'R',
+            BitBoardIndex::BlackQueens => 'Q',
+            BitBoardIndex::BlackKing => 'K',
         }
+    }
+}
+
+#[derive(Clone)]
+pub struct BitBoards(pub Vec<u64>);
+
+impl BitBoards {
+    // Constructor
+    pub fn new() -> Self {
+        BitBoards(vec![
+            0b11111111 << 8,
+            0b01000010,
+            0b00100100,
+            0b10000001,
+            0b00001000,
+            0b00010000,
+            0b11111111 << 8 * 6,
+            0b01000010 << 8 * 7,
+            0b00100100 << 8 * 7,
+            0b10000001 << 8 * 7,
+            0b00010000 << 8 * 7,
+            0b00001000 << 8 * 7,
+            0b11111111 | 0b11111111 << 8 | 0b11111111 << 8 * 7 | 0b11111111 << 8 * 6,
+            0b11111111 | 0b11111111 << 8,
+            0b11111111 << 8 * 7 | 0b11111111 << 8 * 6,
+        ])
+    }
+
+    pub fn get_pawns(&self) -> u64 {
+        self.0[BitBoardIndex::WhitePawns as usize] | self.0[BitBoardIndex::BlackPawns as usize]
+    }
+
+    pub fn get_bishops(&self) -> u64 {
+        self.0[BitBoardIndex::WhiteBishops as usize] | self.0[BitBoardIndex::BlackBishops as usize]
+    }
+
+    pub fn get_knights(&self) -> u64 {
+        self.0[BitBoardIndex::WhiteKnights as usize] | self.0[BitBoardIndex::BlackKnights as usize]
+    }
+
+    pub fn get_rooks(&self) -> u64 {
+        self.0[BitBoardIndex::WhiteRooks as usize] | self.0[BitBoardIndex::BlackRooks as usize]
+    }
+
+    pub fn get_queens(&self) -> u64 {
+        self.0[BitBoardIndex::WhiteQueens as usize] | self.0[BitBoardIndex::BlackQueens as usize]
+    }
+
+    pub fn get_kings(&self) -> u64 {
+        self.0[BitBoardIndex::WhiteKing as usize] | self.0[BitBoardIndex::BlackKing as usize]
+    }
+
+    pub fn get_white_pieces(&self) -> u64 {
+        let mut all_white_pieces: u64 = 0;
+        for index in ALL_WHITE_BOARDS {
+            all_white_pieces |= self.0[index as usize];
+        }
+
+        all_white_pieces
+    }
+
+    pub fn get_black_pieces(&self) -> u64 {
+        let mut all_black_pieces: u64 = 0;
+        for index in ALL_BLACK_BOARDS {
+            all_black_pieces |= self.0[index as usize];
+        }
+
+        all_black_pieces
+    }
+
+    pub fn get_all_pieces(&self) -> u64 {
+        let mut all_pieces: u64 = 0;
+        for index in ALL_PIECE_BOARDS {
+            all_pieces |= self.0[index as usize];
+        }
+
+        all_pieces
+    }
+
+    // Getter method for a bitboard at a given index
+    pub fn get_bitboard(&self, index: usize) -> u64 {
+        self.0.get(index).cloned().unwrap()
+    }
+
+    // Setter method for a bitboard at a given index
+    pub fn set_bitboard(&mut self, index: usize, value: u64) {
+        self.0[index] = value;
     }
 }
